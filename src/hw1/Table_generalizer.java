@@ -97,7 +97,7 @@ public class Table_generalizer {
 		return x / 4.0;
 	}
 	
-	private double calculate_percision() { //don't know man.  This might work
+	private double calculate_precision() { //don't know man.  This might work
 		
 		double x = 0.0;
 		double y = 0.0;
