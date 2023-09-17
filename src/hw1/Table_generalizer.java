@@ -118,9 +118,15 @@ public class Table_generalizer {
 		//TODO
 	}
 	
-	private void calculate_entropy() {
+	private void calculate_entropy() { //to be done after we have succesfully found a k = 5, groups should still be active
 		//TODO
+		double x = 0.0;
+		ArrayList<String> uniques = new ArrayList<String>();
+		ArrayList<Integer> numUniques = new ArrayList<Integer>();
 		
+		//run the list of groups.
+		//if unique value, add to unique and add a 1 to numUniques
+		//else find index on uniques to add 1 to the corresponding index to numUniques
 		
 	}
 	
