@@ -118,15 +118,65 @@ public class Table_generalizer {
 		//TODO
 	}
 	
-	private void calculate_entropy() { //to be done after we have succesfully found a k = 5, groups should still be active
-		//TODO
+	private boolean calculate_entropy() { //to be done after we have successfully found a k = 5, groups should still be active
+		int index = 0;
 		double x = 0.0;
 		ArrayList<String> uniques = new ArrayList<String>();
 		ArrayList<Integer> numUniques = new ArrayList<Integer>();
 		
+		
+		while(index < og.age.size()- 9) { //run through the list of groups
+			if(group[index] != 0) {  //checks to see if the row we are on has been visited
+				int groupNum = group[index];
+				uniques.add(manip.occupation.get(index));
+				numUniques.add(1);
+				group[index] = 0;
+				String rich = manip.income.get(index);
+				
+				//now we grabbed the group# and if they were rich. set a second iterator to check the rest of the list for this group
+				
+				for(int i = index + 1; i < og.occupation.size(); i++) {
+					if(group[i] == groupNum && manip.income.get(i) == rich) { //if we find a match
+						if(uniques.contains(manip.occupation.get(i))) {
+							numUniques.set(uniques.indexOf(manip.occupation.get(i)), numUniques.get(uniques.indexOf(manip.occupation.get(i))) + 1);
+							//for when we find this occupation already.  I know its hard to read.  The first part gives the index and so we have to use it twice. Once to aim with and the second to grab the number for addition
+						}
+						else {
+							uniques.add(manip.occupation.get(i));
+							numUniques.add(1);
+						}
+						group[i] = 0; //remember to set group to 0 to indicate we visited it
+					}
+				}
+				
+				//now all uniques should be found and we have the counts.
+				int numSens = 0;
+				for(int i = 0; i < numUniques.size(); i++) {
+					numSens += numUniques.get(i);
+				}
+				
+				//now to run the formula
+				
+				double total = 0.00;
+				
+				for(int i = 0; i < numUniques.size(); i++) {
+					double y = 1.00 * numUniques.get(i)/numSens;
+					y = y * Math.log(y)/ Math.log(2); //change of base formula... java doesn't have a log base 2
+					total += y;
+				}
+				
+				total = total * -1; // to fix the negative after words
+				if (total <= (Math.log(3)/Math.log(2))) {
+					return false;
+				}
+			}
+			index++;
+		}
 		//run the list of groups.
 		//if unique value, add to unique and add a 1 to numUniques
 		//else find index on uniques to add 1 to the corresponding index to numUniques
+		
+		return true;
 		
 	}
 	
