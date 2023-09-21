@@ -192,7 +192,7 @@ public class Table_generalizer {
 			}
 		}
 		// finally bring table to generalized point
-
+		
 		manipAge(solution[0]);
 		manipMarital(solution[1]);
 		manipEducation(solution[2]);
