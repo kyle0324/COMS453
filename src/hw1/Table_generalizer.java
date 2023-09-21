@@ -190,7 +190,7 @@ public class Table_generalizer {
 			}
 		}
 		//finally bring table to generalized point
-		
+		resetAll();
 		manipAge(solution[0]);
 		manipMarital(solution[1]);
 		manipEducation(solution[2]);
@@ -269,8 +269,123 @@ public class Table_generalizer {
 
 	// The parts below this are for problem two and we will need to clarify this
 
-	private void manipTable_l() {
+	private void manipTable_l() throws IOException {
 		// TODO
+		curr_level_identifier[0] = 4;
+		manipAge(curr_level_identifier[0]);
+		found_solution = true;
+		int group_counter = 1;
+		
+		for(int i = 0; i < manip.age.size() - 1; i++) { //runs through the table to give values in groups
+			if(group[i] == 0 && found_solution) {
+				group[i] = group_counter;
+				matching++;
+				for(int j = i +1; j < manip.age.size(); j++) {
+					if(group[j] == 0 && compRecord(i,j)) {
+						group[j] = group_counter;
+						matching++;
+					}
+				} //we don't need to worry about rich this time.  Keep track of entropy
+				
+				if((matching < 5) || calculate_entropy()) {
+					found_solution = false;
+				}
+				matching = 0;
+				group_counter++;
+			}
+		} //this is what one test looks like
+		
+		if(!found_solution) {
+			resetAll();
+			for(int i = 0; i <= max_level_identifier[3]; i++) {
+				for(int j = 0; j <= max_level_identifier[2]; j++) {
+					for(int k = 0; k <= max_level_identifier[1]; k++) {
+						curr_level_identifier[1] = k;
+						curr_level_identifier[2] = j;
+						curr_level_identifier[3] = i;
+						manipAge(curr_level_identifier[0]);
+						manipMarital(curr_level_identifier[1]);
+						manipEducation(curr_level_identifier[2]);
+						manipRace(curr_level_identifier[3]);
+						
+						found_solution = manipGroup_hw2() && calculate_entropy();
+						
+						if(found_solution) {
+							solution = curr_level_identifier;
+							distortion = calculate_distortion();
+							percision = calculate_precision();
+							break;
+						}
+						resetAll();
+					}
+					if(found_solution) {
+						break;
+					}
+				}
+				if(found_solution) {
+					break;
+				}
+			}
+		} //solution should be found
+		if(found_solution) { //now to look at all other combinations, skipping the ones that have higher distortion
+			resetAll();
+			for(int i = 3; i >= 0 ; i--) {
+				curr_level_identifier[0] = i;
+				for(int j = 0; j <= max_level_identifier[3]; j++) {
+					curr_level_identifier[3] = j;
+					for(int k = 0; k <= max_level_identifier[2]; k++) {
+						curr_level_identifier[2] = k;
+						for(int l = 0; l <= max_level_identifier[1]; l++) {
+							curr_level_identifier[1] = l;
+							if(calculate_distortion() < distortion) {
+								manipAge(curr_level_identifier[0]);
+								manipMarital(curr_level_identifier[1]);
+								manipEducation(curr_level_identifier[2]);
+								manipRace(curr_level_identifier[3]);
+								
+								if(manipGroup_hw2() && calculate_entropy()) {
+									solution = curr_level_identifier;
+									distortion = calculate_distortion();
+									percision = calculate_precision();
+								}
+								resetAll();
+							}
+						}
+					}
+				}
+			}
+		}
+		resetAll();
+		manipAge(solution[0]);
+		manipMarital(solution[1]);
+		manipEducation(solution[2]);
+		manipRace(solution[3]);
+		manip.writeTableFile();
+		
+		
+	}
+	private boolean manipGroup_hw2() {
+		
+		matching = 0;
+		int group_counter = 1;
+		boolean works = true;
+		for(int i = 0; i < manip.age.size()-1; i++) {
+			if(group[i] == 0 && works) {
+				group[i] = group_counter;
+				matching++;
+				for(int j = i+1; j < manip.age.size(); j++) {
+					if(group[j] == 0 && compRecord(i, j)) {
+						group[j] = group_counter;
+						matching++;
+					}
+				}
+				
+				if(matching < 5) {
+					works = false;
+				}
+			}
+		}
+		return works;
 	}
 
 	private boolean calculate_entropy() { // to be done after we have successfully found a k = 5, groups should still be
