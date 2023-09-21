@@ -32,7 +32,7 @@ public class main {
 
 		// table.writeTableFile();
 		System.out.println("Success!");
-
+		scnr.close();
 	}
 
 }
