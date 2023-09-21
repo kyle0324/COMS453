@@ -17,7 +17,7 @@ public class main {
 		int choice = scnr.nextInt();
 
 		// Ensure valid choice
-		while (choice != 1 || choice != 2) {
+		while (choice != 1 && choice != 2) {
 			System.out.println("Invalid selection");
 			System.out.println("Please select which privacy algorithm you'd like to use:");
 			System.out.println("1 - k-Anonymity");
