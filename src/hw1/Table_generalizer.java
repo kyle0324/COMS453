@@ -450,18 +450,4 @@ public class Table_generalizer {
 
 	}
 
-	/*
-	 * private void calculate_L() {
-	 * ArrayList<String> uniques = new ArrayList<String>();
-	 * uniques.add(og.occupation.get(0));
-	 * 
-	 * for(int i = 1; i < og.occupation.size(); i++) {
-	 * if(!uniques.contains(og.occupation.get(i))) {
-	 * uniques.add(og.occupation.get(i));
-	 * }
-	 * }
-	 * L = uniques.size();
-	 * }
-	 */
-
 }
