@@ -252,14 +252,12 @@ public class Table_generalizer {
 		return x / 4.0;
 	}
 
-	private double calculate_precision() { // don't know man. This might work
+	private double calculate_precision() { 
 
 		double x = 0.0;
 		double y = 0.0;
-		for (int i = 0; i < max_level_identifier.length; i++) {
-			for (int j = 0; j < curr_level_identifier.length; j++) {
-				y += curr_level_identifier[j] / max_level_identifier[i];
-			}
+		for (int i = 0; i < max_level_identifier.length; i++) { //i think N stands for the number of entries effected
+			y = 1.00 * 3500 * curr_level_identifier[i] / max_level_identifier[i];
 			x += y;
 			y = 0.0;
 		}
