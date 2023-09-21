@@ -12,9 +12,10 @@ public class main {
 		Data_table table = new Data_table("src/hw1/adult.data");
 
 		Table_generalizer tg = new Table_generalizer(table);
-		System.out.println(tg.group.length);
+		System.out.println("distortion: " + tg.distortion);
+		System.out.println("percision: " + tg.percision);
 
-		table.writeTableFile();
+		//table.writeTableFile();
 		System.out.println("Success!");
 
 	}
