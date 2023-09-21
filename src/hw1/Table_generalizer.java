@@ -257,7 +257,7 @@ public class Table_generalizer {
 		double x = 0.0;
 		double y = 0.0;
 		for (int i = 0; i < max_level_identifier.length; i++) { //i think N stands for the number of entries effected
-			y = 1.00 * 3500 * curr_level_identifier[i] / max_level_identifier[i];
+			y = 1.00 * 35000 * curr_level_identifier[i] / max_level_identifier[i];
 			x += y;
 			y = 0.0;
 		}
