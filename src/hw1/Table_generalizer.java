@@ -268,7 +268,6 @@ public class Table_generalizer {
 	// The parts below this are for problem two and we will need to clarify this
 
 	private void manipTable_l() throws IOException {
-		// TODO
 		curr_level_identifier[0] = 4;
 		manipAge(curr_level_identifier[0]);
 		found_solution = true;
