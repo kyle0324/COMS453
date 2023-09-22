@@ -28,7 +28,7 @@ public class main {
 		Table_generalizer tg = new Table_generalizer(table, choice);
 
 		System.out.println("distortion: " + tg.distortion);
-		System.out.println("percision: " + tg.percision);
+		System.out.println("precision: " + tg.precision);
 
 		// table.writeTableFile();
 		System.out.println("Success!");

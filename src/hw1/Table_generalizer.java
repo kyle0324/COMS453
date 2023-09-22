@@ -2,6 +2,7 @@ package hw1;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Table_generalizer {
 	Data_table og;
@@ -22,22 +23,24 @@ public class Table_generalizer {
 	int[] solution;
 
 	double distortion;
-	double percision;
+	double precision;
 
 	double entropy;
 	int L = 3;
 
 	public Table_generalizer(Data_table dt, int algoChoice) throws IOException {
 		distortion = 0;
-		percision = 0;
+		precision = 0;
 		og = dt;
 		manip = new Data_table(dt);
 		group = new int[dt.age.size()];
 		resetGroup();
 		curr_level_identifier = new int[4];
+		solution = new int[4];
 
 		for (int i = 0; i < curr_level_identifier.length; i++) {
 			curr_level_identifier[i] = 0;
+			solution[i] = 0;
 		}
 
 		max_level_identifier = new int[4];
@@ -63,19 +66,23 @@ public class Table_generalizer {
 	}
 
 	private void resetAge() {
-		manip.age = og.age;
+		Collections.copy(manip.age, og.age);
+		// manip.age = new ArrayList<>(og.age);
 	}
 
 	private void resetMarital() {
-		manip.marital = og.marital;
+		Collections.copy(manip.marital, og.marital);
+		// manip.marital = new ArrayList<>(og.marital);
 	}
 
 	private void resetEducation() {
-		manip.education = og.education;
+		Collections.copy(manip.education, og.education);
+		// manip.education = new ArrayList<>(og.education);
 	}
 
 	private void resetRace() {
-		manip.race = og.race;
+		Collections.copy(manip.race, og.race);
+		// manip.race = new ArrayList<>(og.race);
 	}
 
 	private void resetGroup() {
@@ -146,9 +153,14 @@ public class Table_generalizer {
 						found_solution = manipGroup_hw1(); // this will also test to make sure
 
 						if (found_solution) {
-							solution = curr_level_identifier;
+							// solution = curr_level_identifier;
+							solution[0] = curr_level_identifier[0];
+							solution[1] = curr_level_identifier[1];
+							solution[2] = curr_level_identifier[2];
+							solution[3] = curr_level_identifier[3];
+
 							distortion = calculate_distortion();
-							percision = calculate_precision();
+							precision = calculate_precision();
 							break;
 						}
 						resetAll();
@@ -180,9 +192,13 @@ public class Table_generalizer {
 								manipRace(curr_level_identifier[3]);
 
 								if (manipGroup_hw1()) {
-									solution = curr_level_identifier;
+									// solution = curr_level_identifier;
+									solution[0] = curr_level_identifier[0];
+									solution[1] = curr_level_identifier[1];
+									solution[2] = curr_level_identifier[2];
+									solution[3] = curr_level_identifier[3];
 									distortion = calculate_distortion();
-									percision = calculate_precision();
+									precision = calculate_precision();
 								}
 								resetAll();
 							}
@@ -438,9 +454,13 @@ public class Table_generalizer {
 						found_solution = manipGroup_hw2() && calculate_entropy();
 
 						if (found_solution) {
-							solution = curr_level_identifier;
+							// solution = curr_level_identifier;
+							solution[0] = curr_level_identifier[0];
+							solution[1] = curr_level_identifier[1];
+							solution[2] = curr_level_identifier[2];
+							solution[3] = curr_level_identifier[3];
 							distortion = calculate_distortion();
-							percision = calculate_precision();
+							precision = calculate_precision();
 							break;
 						}
 						resetAll();
@@ -472,9 +492,13 @@ public class Table_generalizer {
 								manipRace(curr_level_identifier[3]);
 
 								if (manipGroup_hw2() && calculate_entropy()) {
-									solution = curr_level_identifier;
+									// solution = curr_level_identifier;
+									solution[0] = curr_level_identifier[0];
+									solution[1] = curr_level_identifier[1];
+									solution[2] = curr_level_identifier[2];
+									solution[3] = curr_level_identifier[3];
 									distortion = calculate_distortion();
-									percision = calculate_precision();
+									precision = calculate_precision();
 								}
 								resetAll();
 							}
