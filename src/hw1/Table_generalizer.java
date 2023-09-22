@@ -2,6 +2,7 @@ package hw1;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class Table_generalizer {
 	Data_table og;
@@ -22,22 +23,24 @@ public class Table_generalizer {
 	int[] solution;
 
 	double distortion;
-	double percision;
+	double precision;
 
 	double entropy;
 	int L = 3;
 
-	public Table_generalizer(Data_table dt) throws IOException {
+	public Table_generalizer(Data_table dt, int algoChoice) throws IOException {
 		distortion = 0;
-		percision = 0;
+		precision = 0;
 		og = dt;
 		manip = new Data_table(dt);
 		group = new int[dt.age.size()];
 		resetGroup();
 		curr_level_identifier = new int[4];
+		solution = new int[4];
 
 		for (int i = 0; i < curr_level_identifier.length; i++) {
 			curr_level_identifier[i] = 0;
+			solution[i] = 0;
 		}
 
 		max_level_identifier = new int[4];
@@ -46,9 +49,12 @@ public class Table_generalizer {
 		max_level_identifier[1] = 3;
 		max_level_identifier[2] = 2;
 		max_level_identifier[3] = 1;
-		
-		
-		manipTable_k();
+
+		if (algoChoice == 1) {
+			manipTable_k();
+		} else if (algoChoice == 2) {
+			manipTable_l();
+		}
 	}
 
 	private void resetAll() {
@@ -60,19 +66,23 @@ public class Table_generalizer {
 	}
 
 	private void resetAge() {
-		manip.age = og.age;
+		Collections.copy(manip.age, og.age);
+		// manip.age = new ArrayList<>(og.age);
 	}
 
 	private void resetMarital() {
-		manip.marital = og.marital;
+		Collections.copy(manip.marital, og.marital);
+		// manip.marital = new ArrayList<>(og.marital);
 	}
 
 	private void resetEducation() {
-		manip.education = og.education;
+		Collections.copy(manip.education, og.education);
+		// manip.education = new ArrayList<>(og.education);
 	}
 
 	private void resetRace() {
-		manip.race = og.race;
+		Collections.copy(manip.race, og.race);
+		// manip.race = new ArrayList<>(og.race);
 	}
 
 	private void resetGroup() {
@@ -102,37 +112,36 @@ public class Table_generalizer {
 		manipAge(curr_level_identifier[0]);
 		found_solution = true;
 		int group_counter = 1;
-		for(int i = 0; i < manip.age.size() - 1; i++) {
-			if(group[i] == 0 && found_solution) {
+		for (int i = 0; i < manip.age.size() - 1; i++) {
+			if (group[i] == 0 && found_solution) {
 				group[i] = group_counter;
 				String richness = manip.income.get(i);
 				matching++;
-				for(int j = i +1; j < manip.age.size(); j++) {
-					if(group[j] == 0 && compRecord(i,j) && manip.income.get(j).contains(richness)) {
+				for (int j = i + 1; j < manip.age.size(); j++) {
+					if (group[j] == 0 && compRecord(i, j) && manip.income.get(j).contains(richness)) {
 						group[j] = group_counter;
 						matching++;
 					}
 				}
-				if(richness.contains("<=50K")) { //set variable for rich
+				if (richness.contains("<=50K")) { // set variable for rich
 					isRich = false;
-				}
-				else {
+				} else {
 					isRich = true;
 				}
-				
-				if((isRich && matching < 5) || (!isRich && matching < 10)) {
+
+				if ((isRich && matching < 5) || (!isRich && matching < 10)) {
 					found_solution = false;
 				}
 				matching = 0;
 				group_counter++;
 			}
-		} //this is what one test looks like
-		
-		if(!found_solution) {
+		} // this is what one test looks like
+
+		if (!found_solution) {
 			resetAll();
-			for(int i = 0; i <= max_level_identifier[3]; i++) {
-				for(int j = 0; j <= max_level_identifier[2]; j++) {
-					for(int k = 0; k <= max_level_identifier[1]; k++) {
+			for (int i = 0; i <= max_level_identifier[3]; i++) {
+				for (int j = 0; j <= max_level_identifier[2]; j++) {
+					for (int k = 0; k <= max_level_identifier[1]; k++) {
 						curr_level_identifier[1] = k;
 						curr_level_identifier[2] = j;
 						curr_level_identifier[3] = i;
@@ -140,47 +149,56 @@ public class Table_generalizer {
 						manipMarital(curr_level_identifier[1]);
 						manipEducation(curr_level_identifier[2]);
 						manipRace(curr_level_identifier[3]);
-						
-						found_solution = manipGroup_hw1(); //this will also test to make sure
-						
-						
-						if(found_solution) {
-							solution = curr_level_identifier;
+
+						found_solution = manipGroup_hw1(); // this will also test to make sure
+
+						if (found_solution) {
+							// solution = curr_level_identifier;
+							solution[0] = curr_level_identifier[0];
+							solution[1] = curr_level_identifier[1];
+							solution[2] = curr_level_identifier[2];
+							solution[3] = curr_level_identifier[3];
+
 							distortion = calculate_distortion();
-							percision = calculate_precision();
+							precision = calculate_precision();
 							break;
 						}
 						resetAll();
 					}
-					if(found_solution) {
+					if (found_solution) {
 						break;
 					}
 				}
-				if(found_solution) {
+				if (found_solution) {
 					break;
 				}
 			}
-		} //solution should be found
-		if(found_solution) { //now to look at all other combinations, skipping the ones that have higher distortion
+		} // solution should be found
+		if (found_solution) { // now to look at all other combinations, skipping the ones that have higher
+													// distortion
 			resetAll();
-			for(int i = 3; i >= 0 ; i--) {
+			for (int i = 3; i >= 0; i--) {
 				curr_level_identifier[0] = i;
-				for(int j = 0; j <= max_level_identifier[3]; j++) {
+				for (int j = 0; j <= max_level_identifier[3]; j++) {
 					curr_level_identifier[3] = j;
-					for(int k = 0; k <= max_level_identifier[2]; k++) {
+					for (int k = 0; k <= max_level_identifier[2]; k++) {
 						curr_level_identifier[2] = k;
-						for(int l = 0; l <= max_level_identifier[1]; l++) {
+						for (int l = 0; l <= max_level_identifier[1]; l++) {
 							curr_level_identifier[1] = l;
-							if(calculate_distortion() < distortion) {
+							if (calculate_distortion() < distortion) {
 								manipAge(curr_level_identifier[0]);
 								manipMarital(curr_level_identifier[1]);
 								manipEducation(curr_level_identifier[2]);
 								manipRace(curr_level_identifier[3]);
-								
-								if(manipGroup_hw1()) {
-									solution = curr_level_identifier;
+
+								if (manipGroup_hw1()) {
+									// solution = curr_level_identifier;
+									solution[0] = curr_level_identifier[0];
+									solution[1] = curr_level_identifier[1];
+									solution[2] = curr_level_identifier[2];
+									solution[3] = curr_level_identifier[3];
 									distortion = calculate_distortion();
-									percision = calculate_precision();
+									precision = calculate_precision();
 								}
 								resetAll();
 							}
@@ -189,38 +207,38 @@ public class Table_generalizer {
 				}
 			}
 		}
-		//finally bring table to generalized point
+		// finally bring table to generalized point
 		resetAll();
+
 		manipAge(solution[0]);
 		manipMarital(solution[1]);
 		manipEducation(solution[2]);
 		manipRace(solution[3]);
 		manip.writeTableFile();
 	}
-	
+
 	private boolean manipGroup_hw1() {
 		matching = 0;
 		int group_counter = 1;
 		boolean works = true;
-		for(int i = 0; i < manip.age.size()-1; i++) {
-			if(group[i] == 0 && works) {
+		for (int i = 0; i < manip.age.size() - 1; i++) {
+			if (group[i] == 0 && works) {
 				group[i] = group_counter;
 				matching++;
-				for(int j = i+1; j < manip.age.size(); j++) {
-					if(group[j] == 0 && compRecord(i, j) && manip.income.get(i).contains(manip.income.get(j))) {
+				for (int j = i + 1; j < manip.age.size(); j++) {
+					if (group[j] == 0 && compRecord(i, j) && manip.income.get(i).contains(manip.income.get(j))) {
 						group[j] = group_counter;
 						matching++;
 					}
 				}
-				//now set isRich
-				if(manip.income.get(i).contains("<=50K")) {
+				// now set isRich
+				if (manip.income.get(i).contains("<=50K")) {
 					isRich = false;
-				}
-				else {
+				} else {
 					isRich = true;
 				}
-				
-				if((isRich && matching < 5) ||  (!isRich && matching < 10)) {
+
+				if ((isRich && matching < 5) || (!isRich && matching < 10)) {
 					works = false;
 				}
 			}
@@ -228,20 +246,148 @@ public class Table_generalizer {
 		return works;
 	}
 
+	/**
+	 * Generalizes age attribute of the entire table
+	 * 
+	 * @param level - generalization level to set to
+	 */
 	private void manipAge(int level) {
-		// TODO change entire table
+		// Resetting to original
+		if (level == 0) {
+			resetAge();
+		} else if (level == 4) { // Set to highest generalization
+			for (int i = 0; i < manip.age.size(); i++) {
+				manip.age.set(i, "*");
+			}
+		} else if (level == 3) { // Set to <40 and >=40
+			for (int i = 0; i < manip.age.size(); i++) {
+				int elem = Integer.parseInt(manip.age.get(i));
+				if (elem < 40) {
+					manip.age.set(i, "<40");
+				} else {
+					manip.age.set(i, ">=40");
+				}
+			}
+		} else if (level == 2) { // Set to intervals of 10
+			for (int i = 0; i < manip.age.size(); i++) {
+				int elem = Integer.parseInt(manip.age.get(i));
+				if (elem < 28) {
+					manip.age.set(i, "<28");
+				} else if (elem < 38) {
+					manip.age.set(i, "<38");
+				} else if (elem < 48) {
+					manip.age.set(i, "<48");
+				} else if (elem < 58) {
+					manip.age.set(i, "<58");
+				} else {
+					manip.age.set(i, ">=58");
+				}
+			}
+		} else if (level == 1) { // Set to intervals of 5
+			for (int i = 0; i < manip.age.size(); i++) {
+				int elem = Integer.parseInt(manip.age.get(i));
+				if (elem < 23) {
+					manip.age.set(i, "<23");
+				} else if (elem < 28) {
+					manip.age.set(i, "<28");
+				} else if (elem < 33) {
+					manip.age.set(i, "<33");
+				} else if (elem < 38) {
+					manip.age.set(i, "<38");
+				} else if (elem < 43) {
+					manip.age.set(i, "<43");
+				} else if (elem < 48) {
+					manip.age.set(i, "<48");
+				} else if (elem < 53) {
+					manip.age.set(i, "<53");
+				} else if (elem < 58) {
+					manip.age.set(i, "<58");
+				} else {
+					manip.age.set(i, ">=58");
+				}
+			}
+		}
+		return;
 	}
 
+	/**
+	 * Generalizes marital status attribute of the entire table, max level of 2
+	 * 
+	 * @param level - generalization level to set to
+	 */
 	private void manipMarital(int level) {
-		// TODO change entire table
+		if (level == 0) { // Reset to original
+			resetMarital();
+		} else if (level == 2) { // Set to highest generalization level
+			for (int i = 0; i < manip.marital.size(); i++) {
+				manip.marital.set(i, "*");
+			}
+		} else if (level == 1) {
+			for (int i = 0; i < manip.marital.size(); i++) {
+				String elem = manip.marital.get(i).toLowerCase();
+				if (elem.contains("married")) {
+					manip.marital.set(i, "Married");
+				} else {
+					manip.marital.set(i, "Single");
+				}
+			}
+		}
+		return;
 	}
 
+	/**
+	 * Generalizes education attribute of the entire table, max level of 3
+	 * 
+	 * @param level - generalization level to set to
+	 */
 	private void manipEducation(int level) {
-		// TODO change entire table
+		if (level == 0) { // Reset to original
+			resetEducation();
+		} else if (level == 3) { // Set to highest generalization level
+			for (int i = 0; i < manip.education.size(); i++) {
+				manip.education.set(i, "*");
+			}
+		} else if (level == 2) { // Set to higher learning or none
+			for (int i = 0; i < manip.education.size(); i++) {
+				String elem = manip.education.get(i).toLowerCase();
+				if (elem.contains("th") || elem.equals("preschool") || elem.contains("grad")) {
+					manip.education.set(i, "No Higher Learning");
+				} else if (elem.contains("assoc") || elem.contains("college") || elem.equals("bachelors")
+						|| elem.equals("masters") || elem.equals("doctorate")
+						|| elem.contains("prof")) {
+					manip.education.set(i, "Higher Learning");
+				}
+			}
+		} else if (level == 1) { // Set to no highschool diploma, < Bachelors, or >= Bachelors
+			for (int i = 0; i < manip.education.size(); i++) {
+				String elem = manip.education.get(i).toLowerCase();
+				if (elem.contains("th") || elem.equals("preschool")) {
+					manip.education.set(i, "No Highschool Diploma");
+				} else if (elem.contains("assoc") || elem.contains("grad") || elem.contains("college")) {
+					manip.education.set(i, "< Bachelors");
+				} else if (elem.equals("bachelors") || elem.equals("masters") || elem.equals("doctorate")
+						|| elem.contains("prof")) {
+					manip.education.set(i, ">= Bachelors");
+				}
+			}
+		}
+		return;
 	}
 
+	/**
+	 * Generalizes race attribute of the entire table, max level of 1
+	 * 
+	 * @param level - generalization level to set to
+	 */
 	private void manipRace(int level) {
-		// TODO change entire table
+		if (level == 0) { // Reset to original
+			resetRace();
+		} else if (level == 1) { // Set to max generalization
+			for (int i = 0; i < manip.race.size(); i++) {
+				manip.race.set(i, "*");
+			}
+		}
+		return;
 	}
 
 	private double calculate_distortion() {
@@ -252,11 +398,11 @@ public class Table_generalizer {
 		return x / 4.0;
 	}
 
-	private double calculate_precision() { 
+	private double calculate_precision() {
 
 		double x = 0.0;
 		double y = 0.0;
-		for (int i = 0; i < max_level_identifier.length; i++) { //i think N stands for the number of entries effected
+		for (int i = 0; i < max_level_identifier.length; i++) { // i think N stands for the number of entries effected
 			y = 1.00 * manip.age.size() * curr_level_identifier[i] / max_level_identifier[i];
 			x += y;
 			y = 0.0;
@@ -272,31 +418,31 @@ public class Table_generalizer {
 		manipAge(curr_level_identifier[0]);
 		found_solution = true;
 		int group_counter = 1;
-		
-		for(int i = 0; i < manip.age.size() - 1; i++) { //runs through the table to give values in groups
-			if(group[i] == 0 && found_solution) {
+
+		for (int i = 0; i < manip.age.size() - 1; i++) { // runs through the table to give values in groups
+			if (group[i] == 0 && found_solution) {
 				group[i] = group_counter;
 				matching++;
-				for(int j = i +1; j < manip.age.size(); j++) {
-					if(group[j] == 0 && compRecord(i,j)) {
+				for (int j = i + 1; j < manip.age.size(); j++) {
+					if (group[j] == 0 && compRecord(i, j)) {
 						group[j] = group_counter;
 						matching++;
 					}
-				} //we don't need to worry about rich this time.  Keep track of entropy
-				
-				if((matching < 5) || calculate_entropy()) {
+				} // we don't need to worry about rich this time. Keep track of entropy
+
+				if ((matching < 5) || calculate_entropy()) {
 					found_solution = false;
 				}
 				matching = 0;
 				group_counter++;
 			}
-		} //this is what one test looks like
-		
-		if(!found_solution) {
+		} // this is what one test looks like
+
+		if (!found_solution) {
 			resetAll();
-			for(int i = 0; i <= max_level_identifier[3]; i++) {
-				for(int j = 0; j <= max_level_identifier[2]; j++) {
-					for(int k = 0; k <= max_level_identifier[1]; k++) {
+			for (int i = 0; i <= max_level_identifier[3]; i++) {
+				for (int j = 0; j <= max_level_identifier[2]; j++) {
+					for (int k = 0; k <= max_level_identifier[1]; k++) {
 						curr_level_identifier[1] = k;
 						curr_level_identifier[2] = j;
 						curr_level_identifier[3] = i;
@@ -304,46 +450,55 @@ public class Table_generalizer {
 						manipMarital(curr_level_identifier[1]);
 						manipEducation(curr_level_identifier[2]);
 						manipRace(curr_level_identifier[3]);
-						
+
 						found_solution = manipGroup_hw2() && calculate_entropy();
-						
-						if(found_solution) {
-							solution = curr_level_identifier;
+
+						if (found_solution) {
+							// solution = curr_level_identifier;
+							solution[0] = curr_level_identifier[0];
+							solution[1] = curr_level_identifier[1];
+							solution[2] = curr_level_identifier[2];
+							solution[3] = curr_level_identifier[3];
 							distortion = calculate_distortion();
-							percision = calculate_precision();
+							precision = calculate_precision();
 							break;
 						}
 						resetAll();
 					}
-					if(found_solution) {
+					if (found_solution) {
 						break;
 					}
 				}
-				if(found_solution) {
+				if (found_solution) {
 					break;
 				}
 			}
-		} //solution should be found
-		if(found_solution) { //now to look at all other combinations, skipping the ones that have higher distortion
+		} // solution should be found
+		if (found_solution) { // now to look at all other combinations, skipping the ones that have higher
+													// distortion
 			resetAll();
-			for(int i = 3; i >= 0 ; i--) {
+			for (int i = 3; i >= 0; i--) {
 				curr_level_identifier[0] = i;
-				for(int j = 0; j <= max_level_identifier[3]; j++) {
+				for (int j = 0; j <= max_level_identifier[3]; j++) {
 					curr_level_identifier[3] = j;
-					for(int k = 0; k <= max_level_identifier[2]; k++) {
+					for (int k = 0; k <= max_level_identifier[2]; k++) {
 						curr_level_identifier[2] = k;
-						for(int l = 0; l <= max_level_identifier[1]; l++) {
+						for (int l = 0; l <= max_level_identifier[1]; l++) {
 							curr_level_identifier[1] = l;
-							if(calculate_distortion() < distortion) {
+							if (calculate_distortion() < distortion) {
 								manipAge(curr_level_identifier[0]);
 								manipMarital(curr_level_identifier[1]);
 								manipEducation(curr_level_identifier[2]);
 								manipRace(curr_level_identifier[3]);
-								
-								if(manipGroup_hw2() && calculate_entropy()) {
-									solution = curr_level_identifier;
+
+								if (manipGroup_hw2() && calculate_entropy()) {
+									// solution = curr_level_identifier;
+									solution[0] = curr_level_identifier[0];
+									solution[1] = curr_level_identifier[1];
+									solution[2] = curr_level_identifier[2];
+									solution[3] = curr_level_identifier[3];
 									distortion = calculate_distortion();
-									percision = calculate_precision();
+									precision = calculate_precision();
 								}
 								resetAll();
 							}
@@ -358,26 +513,32 @@ public class Table_generalizer {
 		manipEducation(solution[2]);
 		manipRace(solution[3]);
 		manip.writeTableFile();
-		
-		
+
 	}
+
 	private boolean manipGroup_hw2() {
-		
+
 		matching = 0;
 		int group_counter = 1;
 		boolean works = true;
-		for(int i = 0; i < manip.age.size()-1; i++) {
-			if(group[i] == 0 && works) {
+		for (int i = 0; i < manip.age.size() - 1; i++) {
+			if (group[i] == 0 && works) {
 				group[i] = group_counter;
 				matching++;
-				for(int j = i+1; j < manip.age.size(); j++) {
-					if(group[j] == 0 && compRecord(i, j)) {
+				for (int j = i + 1; j < manip.age.size(); j++) {
+					if (group[j] == 0 && compRecord(i, j)) {
 						group[j] = group_counter;
 						matching++;
 					}
 				}
-				
-				if(matching < 5) {
+				// now set isRich
+				if (manip.income.get(i).contains("<=50K")) {
+					isRich = false;
+				} else {
+					isRich = true;
+				}
+
+				if (matching < 5) {
 					works = false;
 				}
 			}

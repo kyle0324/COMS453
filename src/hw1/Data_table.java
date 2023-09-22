@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Scanner;
 
 public class Data_table { // lists things in columns. To get number of records do size of an Array
@@ -26,12 +27,19 @@ public class Data_table { // lists things in columns. To get number of records d
 	}
 
 	public Data_table(Data_table dt) {
-		age = dt.age;
-		education = dt.education;
-		marital = dt.marital;
-		race = dt.race;
-		occupation = dt.occupation;
-		income = dt.income;
+		age = (ArrayList<String>) dt.age.clone();
+		education = (ArrayList<String>) dt.education.clone();
+		marital = (ArrayList<String>) dt.marital.clone();
+		race = (ArrayList<String>) dt.race.clone();
+		occupation = (ArrayList<String>) dt.occupation.clone();
+		income = (ArrayList<String>) dt.income.clone();
+
+		Collections.copy(age, dt.age);
+		Collections.copy(education, dt.education);
+		Collections.copy(marital, dt.marital);
+		Collections.copy(race, dt.race);
+		Collections.copy(occupation, dt.occupation);
+		Collections.copy(income, dt.income);
 	}
 
 	private void read(String filename) throws FileNotFoundException {
@@ -71,7 +79,6 @@ public class Data_table { // lists things in columns. To get number of records d
 	}
 
 	public void writeTableFile() throws IOException {
-		// File f = new
 		// File("C:\\Users\\kyle0\\eclipse-workspace\\COMS453\\src\\hw1\\Generalized_table.csv");
 		File f = new File("src/hw1/Generalized_table.csv");
 		f.delete();
