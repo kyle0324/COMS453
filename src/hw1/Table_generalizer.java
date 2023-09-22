@@ -431,13 +431,17 @@ public class Table_generalizer {
 					}
 				} // we don't need to worry about rich this time. Keep track of entropy
 
-				if ((matching < 5) || calculate_entropy()) {
+				if ((matching < 5)) {
 					found_solution = false;
 				}
 				matching = 0;
 				group_counter++;
 			}
 		} // this is what one test looks like
+		
+		if(found_solution) {
+			found_solution = calculate_entropy();
+		}
 
 		if (!found_solution) {
 			resetAll();
@@ -532,16 +536,12 @@ public class Table_generalizer {
 						matching++;
 					}
 				}
-				// now set isRich
-				if (manip.income.get(i).contains("<=50K")) {
-					isRich = false;
-				} else {
-					isRich = true;
-				}
 
 				if (matching < 5) {
 					works = false;
 				}
+				matching = 0;
+				group_counter++;
 			}
 		}
 		return works;
@@ -554,19 +554,18 @@ public class Table_generalizer {
 		ArrayList<String> uniques = new ArrayList<String>();
 		ArrayList<Integer> numUniques = new ArrayList<Integer>();
 
-		while (index < og.age.size() - 9) { // run through the list of groups
+		while (index < og.age.size() - 2) { // run through the list of groups
 			if (group[index] != 0) { // checks to see if the row we are on has been visited
 				int groupNum = group[index];
 				uniques.add(manip.occupation.get(index));
 				numUniques.add(1);
 				group[index] = 0;
-				String rich = manip.income.get(index);
 
 				// now we grabbed the group# and if they were rich. set a second iterator to
 				// check the rest of the list for this group
 
 				for (int i = index + 1; i < og.occupation.size(); i++) {
-					if (group[i] == groupNum && manip.income.get(i) == rich) { // if we find a match
+					if (group[i] == groupNum) { // if we find a match
 						if (uniques.contains(manip.occupation.get(i))) {
 							numUniques.set(uniques.indexOf(manip.occupation.get(i)),
 									numUniques.get(uniques.indexOf(manip.occupation.get(i))) + 1);
