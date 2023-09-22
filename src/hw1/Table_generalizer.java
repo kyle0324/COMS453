@@ -217,7 +217,7 @@ public class Table_generalizer {
 		manip.writeTableFile();
 	}
 
-	private boolean manipGroup_hw1() {
+	private boolean manipGroup_hw1() { //TODO problem may exist here, it took way too long
 		matching = 0;
 		int group_counter = 1;
 		boolean works = true;
@@ -241,6 +241,7 @@ public class Table_generalizer {
 				if ((isRich && matching < 5) || (!isRich && matching < 10)) {
 					works = false;
 				}
+				matching = 0;
 			}
 		}
 		return works;
