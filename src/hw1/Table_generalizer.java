@@ -217,7 +217,7 @@ public class Table_generalizer {
 		manip.writeTableFile();
 	}
 
-	private boolean manipGroup_hw1() { //TODO problem may exist here, it took way too long
+	private boolean manipGroup_hw1() {
 		matching = 0;
 		int group_counter = 1;
 		boolean works = true;
