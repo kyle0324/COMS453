@@ -1,0 +1,12 @@
+When creating our source files to accomplish this task, we saw a lot of similarities between 
+k-anonymity and l-diversity and therefore we formed our algorithms within the same file, as 
+they use the same data structures and other methods.
+
+By the time we realized we were meant to separate them, it would have required a lot of refactoring. 
+As such, we have labeled a majority of the methods within the Table_generalizer.java file with the 
+appropriate prefixes to help identify which belong to which. That source file should be the only file 
+where the algorithm dependent methods are, so Data_table.java and main.java are just the 
+data structure used, and the runner for the program. 
+
+We hope this is satisfactory and apologize for the inconvenience in file naming convention.
+Kyle Trebbien and Kyle Clements
