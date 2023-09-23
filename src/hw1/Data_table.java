@@ -42,6 +42,12 @@ public class Data_table { // lists things in columns. To get number of records d
 		Collections.copy(income, dt.income);
 	}
 
+	/**
+	 * Reads in file data for generalized table
+	 * 
+	 * @param filename - name of file to read
+	 * @throws FileNotFoundException
+	 */
 	private void read(String filename) throws FileNotFoundException {
 		File f = new File(filename);
 		Scanner scn = new Scanner(f);
@@ -68,7 +74,7 @@ public class Data_table { // lists things in columns. To get number of records d
 				line.next();
 				line.next();
 				income.add(line.next());
-				System.out.println("read line : " + i);
+				// System.out.println("read line : " + i);
 				i++;
 				line.close();
 			}
@@ -78,14 +84,19 @@ public class Data_table { // lists things in columns. To get number of records d
 
 	}
 
+	/**
+	 * Writes generalized table to new file
+	 * 
+	 * @throws IOException
+	 */
 	public void writeTableFile() throws IOException {
-		// File("C:\\Users\\kyle0\\eclipse-workspace\\COMS453\\src\\hw1\\Generalized_table.csv");
+		// If have a different desired output, or file structure, can respecify here
 		File f = new File("src/hw1/Generalized_table.csv");
 		f.delete();
 		f.createNewFile();
 		FileWriter fw = new FileWriter(f);
 
-		fw.write("age, education, marital, race, occupation \n"); // (SUCCESS)
+		fw.write("age, education, marital, race, occupation \n");
 		for (int i = 0; i < age.size(); i++) {
 			fw.write(age.get(i) + ", " + education.get(i) + ", " + marital.get(i) + ", " + race.get(i) + ", "
 					+ occupation.get(i) + "\n");

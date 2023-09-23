@@ -51,12 +51,15 @@ public class Table_generalizer {
 		max_level_identifier[3] = 1;
 
 		if (algoChoice == 1) {
-			manipTable_k();
+			hw1_1_manipTable_k();
 		} else if (algoChoice == 2) {
-			manipTable_l();
+			hw1_2_manipTable_l();
 		}
 	}
 
+	/**
+	 * Resets data table
+	 */
 	private void resetAll() {
 		resetAge();
 		resetMarital();
@@ -91,6 +94,13 @@ public class Table_generalizer {
 		}
 	}
 
+	/**
+	 * Compares two records for equivalence
+	 * 
+	 * @param r1 - first record
+	 * @param r2 - second record
+	 * @return - true if equivalent, false otherwise
+	 */
 	private boolean compRecord(int r1, int r2) {
 		if (manip.age.get(r1).equals(manip.age.get(r2))) {
 			// Continue checking
@@ -107,7 +117,12 @@ public class Table_generalizer {
 		return false;
 	}
 
-	private void manipTable_k() throws IOException {
+	/**
+	 * k-anon algorithm
+	 * 
+	 * @throws IOException
+	 */
+	private void hw1_1_manipTable_k() throws IOException {
 		curr_level_identifier[0] = 4;
 		manipAge(curr_level_identifier[0]);
 		found_solution = true;
@@ -150,7 +165,7 @@ public class Table_generalizer {
 						manipEducation(curr_level_identifier[2]);
 						manipRace(curr_level_identifier[3]);
 
-						found_solution = manipGroup_hw1(); // this will also test to make sure
+						found_solution = hw1_1_manipGroup(); // this will also test to make sure
 
 						if (found_solution) {
 							// solution = curr_level_identifier;
@@ -159,8 +174,8 @@ public class Table_generalizer {
 							solution[2] = curr_level_identifier[2];
 							solution[3] = curr_level_identifier[3];
 
-							distortion = calculate_distortion();
-							precision = calculate_precision();
+							distortion = hw1_calculate_distortion();
+							precision = hw1_calculate_precision();
 							break;
 						}
 						resetAll();
@@ -185,20 +200,20 @@ public class Table_generalizer {
 						curr_level_identifier[2] = k;
 						for (int l = 0; l <= max_level_identifier[1]; l++) {
 							curr_level_identifier[1] = l;
-							if (calculate_distortion() < distortion) {
+							if (hw1_calculate_distortion() < distortion) {
 								manipAge(curr_level_identifier[0]);
 								manipMarital(curr_level_identifier[1]);
 								manipEducation(curr_level_identifier[2]);
 								manipRace(curr_level_identifier[3]);
 
-								if (manipGroup_hw1()) {
+								if (hw1_1_manipGroup()) {
 									// solution = curr_level_identifier;
 									solution[0] = curr_level_identifier[0];
 									solution[1] = curr_level_identifier[1];
 									solution[2] = curr_level_identifier[2];
 									solution[3] = curr_level_identifier[3];
-									distortion = calculate_distortion();
-									precision = calculate_precision();
+									distortion = hw1_calculate_distortion();
+									precision = hw1_calculate_precision();
 								}
 								resetAll();
 							}
@@ -217,7 +232,12 @@ public class Table_generalizer {
 		manip.writeTableFile();
 	}
 
-	private boolean manipGroup_hw1() {
+	/**
+	 * Checks groups for k-anon
+	 * 
+	 * @return - if can make appropriate groupings, true if yes, false otherwise
+	 */
+	private boolean hw1_1_manipGroup() {
 		matching = 0;
 		int group_counter = 1;
 		boolean works = true;
@@ -391,7 +411,12 @@ public class Table_generalizer {
 		return;
 	}
 
-	private double calculate_distortion() {
+	/**
+	 * Formula to distortion
+	 * 
+	 * @return - distortion value
+	 */
+	private double hw1_calculate_distortion() {
 		double x = 0.0;
 		for (int i = 0; i < curr_level_identifier.length; i++) {
 			x += curr_level_identifier[i] * 1.00 / max_level_identifier[i];
@@ -399,7 +424,12 @@ public class Table_generalizer {
 		return x / 4.0;
 	}
 
-	private double calculate_precision() {
+	/**
+	 * Formula for precision
+	 * 
+	 * @return - precision value
+	 */
+	private double hw1_calculate_precision() {
 
 		double x = 0.0;
 		double y = 0.0;
@@ -412,9 +442,12 @@ public class Table_generalizer {
 		return x;
 	}
 
-	// The parts below this are for problem two and we will need to clarify this
-
-	private void manipTable_l() throws IOException {
+	/**
+	 * l-diversity algorithm
+	 * 
+	 * @throws IOException
+	 */
+	private void hw1_2_manipTable_l() throws IOException {
 		curr_level_identifier[0] = 4;
 		manipAge(curr_level_identifier[0]);
 		found_solution = true;
@@ -438,9 +471,9 @@ public class Table_generalizer {
 				group_counter++;
 			}
 		} // this is what one test looks like
-		
-		if(found_solution) {
-			found_solution = calculate_entropy();
+
+		if (found_solution) {
+			found_solution = hw1_2_calculate_entropy();
 		}
 
 		if (!found_solution) {
@@ -456,7 +489,7 @@ public class Table_generalizer {
 						manipEducation(curr_level_identifier[2]);
 						manipRace(curr_level_identifier[3]);
 
-						found_solution = manipGroup_hw2() && calculate_entropy();
+						found_solution = hw1_2_manipGroup() && hw1_2_calculate_entropy();
 
 						if (found_solution) {
 							// solution = curr_level_identifier;
@@ -464,8 +497,8 @@ public class Table_generalizer {
 							solution[1] = curr_level_identifier[1];
 							solution[2] = curr_level_identifier[2];
 							solution[3] = curr_level_identifier[3];
-							distortion = calculate_distortion();
-							precision = calculate_precision();
+							distortion = hw1_calculate_distortion();
+							precision = hw1_calculate_precision();
 							break;
 						}
 						resetAll();
@@ -490,20 +523,20 @@ public class Table_generalizer {
 						curr_level_identifier[2] = k;
 						for (int l = 0; l <= max_level_identifier[1]; l++) {
 							curr_level_identifier[1] = l;
-							if (calculate_distortion() < distortion) {
+							if (hw1_calculate_distortion() < distortion) {
 								manipAge(curr_level_identifier[0]);
 								manipMarital(curr_level_identifier[1]);
 								manipEducation(curr_level_identifier[2]);
 								manipRace(curr_level_identifier[3]);
 
-								if (manipGroup_hw2() && calculate_entropy()) {
+								if (hw1_2_manipGroup() && hw1_2_calculate_entropy()) {
 									// solution = curr_level_identifier;
 									solution[0] = curr_level_identifier[0];
 									solution[1] = curr_level_identifier[1];
 									solution[2] = curr_level_identifier[2];
 									solution[3] = curr_level_identifier[3];
-									distortion = calculate_distortion();
-									precision = calculate_precision();
+									distortion = hw1_calculate_distortion();
+									precision = hw1_calculate_precision();
 								}
 								resetAll();
 							}
@@ -521,7 +554,12 @@ public class Table_generalizer {
 
 	}
 
-	private boolean manipGroup_hw2() {
+	/**
+	 * Checks groups for l-divers
+	 * 
+	 * @return - true if can make groups, false otherwise
+	 */
+	private boolean hw1_2_manipGroup() {
 
 		matching = 0;
 		int group_counter = 1;
@@ -547,8 +585,14 @@ public class Table_generalizer {
 		return works;
 	}
 
-	private boolean calculate_entropy() { // to be done after we have successfully found a k = 5, groups should still be
-																				// active
+	/**
+	 * Formula for entropy
+	 * 
+	 * @return - Returns true if grouping satisfies l entropy, false otherwise
+	 */
+	private boolean hw1_2_calculate_entropy() { // to be done after we have successfully found a k = 5, groups should
+																							// still be
+		// active
 		int index = 0;
 		double x = 0.0;
 		ArrayList<String> uniques = new ArrayList<String>();
