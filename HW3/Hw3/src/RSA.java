@@ -23,10 +23,12 @@ public class RSA {
 
         while (newr != 0) {
             int quotient = r / newr;
-            d = newd;
+            int tmp = newd;
             newd = d - (quotient * newd);
-            r = newr;
+            d = tmp;
+            tmp = newr;
             newr = r - (quotient * newr);
+            r = tmp;
         }
 
         if (r > 1) {
@@ -113,7 +115,14 @@ public class RSA {
 
         while (scnr.hasNextInt()) {
             ix = scnr.nextInt();
-            output += alphabet[(ix % 26) - 1];
+            ix = (ix - 1) % alphabet.length;
+            // System.out.println("IX Value: " + ix);
+            /*
+             * if (ix <0){
+             * ix += alphabet.length;
+             * }
+             */
+            output += alphabet[ix];
         }
 
         scnr.close();
@@ -130,14 +139,16 @@ public class RSA {
         int d;
         String cryptoGram = "14 17 3 28 27 24 16 4 14 9 13 24 1 19 23 1 28 26 5 27 24 16 4 14 26 31 23 3 14 17 14 17 26 24 28 1 4 24 3 19 3 14 3 22 26";
 
+        System.out.println();
         d = rsa_compute_d(e, p, q);
         System.out.println("Value computed for d: " + d);
 
         String plaintext = rsa_Decrypt(cryptoGram, n, d);
-        System.out.println("String decrypted" + plaintext);
+        System.out.println("String decrypted " + plaintext);
 
         String message = translate(plaintext);
         System.out.println("Message after translation:\n");
         System.out.println(message);
+        System.out.println();
     }
 }
