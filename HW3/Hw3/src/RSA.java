@@ -173,55 +173,33 @@ public class RSA {
 
     public static void main(String[] args) throws Exception {
         // Problem 1 Variables
-        // This all works, just uncomment it if want to run it/check. But 
-        // int n = 33;
-        // // Guessing these would have to be 3 and 11
-        // int p = 3;
-        // int q = 11;
-        // int e = 3;
-        // int d;
-        // String cryptoGram = "14 17 3 28 27 24 16 4 14 9 13 24 1 19 23 1 28 26 5 27 24
-        // 16 4 14 26 31 23 3 14 17 14 17 26 24 28 1 4 24 3 19 3 14 3 22 26";
+        // This all works, can runs Problem 1 and 2 at the same time. Can comment one
+        // out if needed
+        int n = 33;
+        // Guessing these would have to be 3 and 11
+        int p = 3;
+        int q = 11;
+        int e = 3;
+        int d;
+        // If comment this string out, will need to fix it back to a single line
+        // probably, otherwise there will be issues.
+        String cryptoGram = "14 17 3 28 27 24 16 4 14 9 13 24 1 19 23 1 28 26 5 27 24 16 4 14 26 31 23 3 14 17 14 17 26 24 28 1 4 24 3 19 3 14 3 22 26";
 
-        // System.out.println();
-        // d = rsa_compute_d(e, p, q);
-        // System.out.println("Value computed for d: " + d);
+        System.out.println();
+        d = rsa_compute_d(e, p, q);
+        System.out.println("Value computed for d: " + d);
 
-        // String plaintext = rsa_Decrypt(cryptoGram, n, d);
-        // System.out.println("String decrypted " + plaintext);
+        String plaintext = rsa_Decrypt(cryptoGram, n, d);
+        System.out.println("String decrypted " + plaintext);
 
-        // String message = translate(plaintext);
-        // System.out.println("Message after translation:\n");
-        // System.out.println(message);
-        // System.out.println();
+        String message = translate(plaintext);
+        System.out.println("Message after translation:\n");
+        System.out.println(message);
+        System.out.println();
         // ****************************************************
 
         // Problem 2 Variables *****************************************
         // *******************************************
-        // OLD STUFF THAT DOES NOT WORK
-        // int p = 9497;
-        // int q = 7187;
-        // int e = 3;
-        // int n = p * q;
-        // int phi = (p - 1) * (q - 1);
-        // int d;
-        // String ptext = "12345678";
-        // String ctext;
-        // String c2text = "12345679";
-        // String p2text;
-
-        // System.out.println();
-        // System.out.println("Verification of e: " + verify_e(e, phi));
-        // System.out.println();
-
-        // d = rsa_compute_d(e, p, q);
-        // System.out.println("Value of d: " + d + "\n");
-
-        // ctext = rsa_Encrypt(ptext, n, e);
-        // System.out.println("Ciphertext of P: \t" + ctext + "\n");
-
-        // System.out.println(rsa_Decrypt(ctext, n, d));
-
         // HAD ISSUES WITH LONGS AND NOT CORRECT MOD/EXP, SO FOUND THIS LIBRARY
         BigInteger p2 = new BigInteger("9497");
         BigInteger q2 = new BigInteger("7187");
@@ -237,7 +215,7 @@ public class RSA {
         if (gcd.compareTo(new BigInteger("1")) == 0) {
             System.out.println("Yep");
         }
-        // Calc d using modInverse. I have a function above that is correct too.
+        // Calculate d using modInverse. I have a function above that is correct too.
         // Otherwise can use
         // https://www.wolframalpha.com/widgets/view.jsp?id=d5bb63088eb2fb2e762f1c260d2b886d
         BigInteger d2 = e2.modInverse(phi2);
