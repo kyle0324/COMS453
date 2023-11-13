@@ -173,6 +173,7 @@ public class RSA {
 
     public static void main(String[] args) throws Exception {
         // Problem 1 Variables
+        // This all works, just uncomment it if want to run it/check. But 
         // int n = 33;
         // // Guessing these would have to be 3 and 11
         // int p = 3;
@@ -222,39 +223,39 @@ public class RSA {
         // System.out.println(rsa_Decrypt(ctext, n, d));
 
         // HAD ISSUES WITH LONGS AND NOT CORRECT MOD/EXP, SO FOUND THIS LIBRARY
-        BigInteger p = new BigInteger("9497");
-        BigInteger q = new BigInteger("7187");
-        BigInteger e = new BigInteger("3");
-        BigInteger n = new BigInteger("68254939");
-        BigInteger phi = new BigInteger("68238256");
-        BigInteger pText = new BigInteger("12345678");
-        BigInteger c2Text = new BigInteger("12345679");
+        BigInteger p2 = new BigInteger("9497");
+        BigInteger q2 = new BigInteger("7187");
+        BigInteger e2 = new BigInteger("3");
+        BigInteger n2 = new BigInteger("68254939");
+        BigInteger phi2 = new BigInteger("68238256");
+        BigInteger pText2 = new BigInteger("12345678");
+        BigInteger c2Text2 = new BigInteger("12345679");
         // BigInteger d = new BigInteger("45492171");
 
         // Check relatively prime
-        BigInteger gcd = e.gcd(phi);
+        BigInteger gcd = e2.gcd(phi2);
         if (gcd.compareTo(new BigInteger("1")) == 0) {
             System.out.println("Yep");
         }
         // Calc d using modInverse. I have a function above that is correct too.
         // Otherwise can use
         // https://www.wolframalpha.com/widgets/view.jsp?id=d5bb63088eb2fb2e762f1c260d2b886d
-        BigInteger d = e.modInverse(phi);
+        BigInteger d2 = e2.modInverse(phi2);
 
         // Encrypt P using modPow
-        BigInteger cText = pText.modPow(e, n);
-        System.out.println(cText);
+        BigInteger cText2 = pText2.modPow(e2, n2);
+        System.out.println(cText2);
 
         // Decrypt C back to original P
-        BigInteger ptText = cText.modPow(d, n);
-        System.out.println(ptText);
+        BigInteger ptText2 = cText2.modPow(d2, n2);
+        System.out.println(ptText2);
 
         // Decrypt C'
-        BigInteger p2Text = c2Text.modPow(d, n);
-        System.out.println(p2Text);
+        BigInteger p2Text2 = c2Text2.modPow(d2, n2);
+        System.out.println(p2Text2);
 
         // Encrypt P' back to original C'
-        BigInteger ctText = p2Text.modPow(e, n);
-        System.out.println(ctText);
+        BigInteger ctText2 = p2Text2.modPow(e2, n2);
+        System.out.println(ctText2);
     }
 }
